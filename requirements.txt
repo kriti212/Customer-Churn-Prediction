@@ -1,0 +1,17 @@
+# Pinned: the saved model must be loaded with the same versions it was trained with.
+ipykernel==7.4.0
+joblib==1.6.0
+lightgbm==4.7.0
+matplotlib==3.11.2
+nbconvert==7.17.2
+nbformat==5.11.1
+numpy==2.5.5
+optuna==5.1.0
+pandas==3.1.1
+plotly==7.1.0
+pytest==9.2.0
+scikit-learn==1.9.1
+seaborn==0.13.2
+shap==0.54.1
+streamlit==1.67.0
+xgboost==3.4.1
