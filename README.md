@@ -7,20 +7,20 @@ probability, its main reasons and a suggested retention action, all shown in a S
 
 | Metric | Value | Target |
 |---|---|---|
-| ROC-AUC | **0.877** | ≥ 0.85 ✅ |
-| Recall (churners caught) | **73.8%** | ≥ 70% ✅ |
-| Precision | 54.1% | |
-| PR-AUC | 0.725 | random = 0.204 |
-| Brier score (calibration) | 0.098 | |
+| ROC-AUC | **0.879** | ≥ 0.85 ✅ |
+| Recall (churners caught) | **70.8%** | ≥ 70% ✅ |
+| Precision | 56.7% | |
+| PR-AUC | 0.726 | random = 0.204 |
+| Brier score (calibration) | 0.097 | |
 | Expected cost vs. no model | **−53%** | |
 
 - **Model:** XGBoost tuned with Optuna (50 trials), engineered features, isotonic calibration.
-- **Decision threshold:** 0.24, chosen to minimise cost when a missed churner costs **3×** a wasted retention offer.
+- **Decision threshold:** 0.27, chosen to minimise cost when a missed churner costs **3×** a wasted retention offer.
 - **Model comparison** (5-fold CV ROC-AUC on the training set):
-  - Default settings: logistic regression 0.766 (raw) / 0.835 (engineered), Random Forest 0.858, XGBoost 0.857, LightGBM 0.847.
+  - Default settings: logistic regression 0.766 (raw) / 0.835 (engineered), Random Forest 0.858, XGBoost 0.858, LightGBM 0.847.
   - Tuned with Optuna: XGBoost **0.864**, Random Forest 0.860.
   - Every run is logged in `experiments/log.csv`.
-- **Main drivers (SHAP):** number of products, age, gender, active membership, geography.
+- **Main drivers (SHAP):** number of products, age × inactive member, age × active member, gender, geography.
 
 ## Important decisions
 
@@ -30,16 +30,16 @@ probability, its main reasons and a suggested retention action, all shown in a S
 - **Identifiers dropped:** `RowNumber`, `CustomerId`, `Surname`.
 - **Kept on request despite almost no signal:** `Satisfaction Score`, `Card Type`, `Point Earned`.
 - **Calibrated probabilities.** Class weighting inflates raw scores: before calibration the model predicted
-  36% churn on average against an actual 20%. After isotonic calibration the average is 20.3%.
+  37% churn on average against an actual 20%. After isotonic calibration the average is 20.2%.
 - **The test set is used once.** `src/evaluate.py` refuses to run again unless you pass `--force`.
 
 ## Fairness check (test set)
 
 | Group | Recall | False-positive rate |
 |---|---|---|
-| Female / Male | 0.78 / 0.69 | 0.22 / 0.11 |
-| Germany / France / Spain | 0.85 / 0.66 / 0.70 | 0.30 / 0.12 / 0.12 |
-| Age 18-29 / 40-49 / 50-59 | 0.24 / 0.86 / 0.95 | 0.03 / 0.35 / 0.53 |
+| Female / Male | 0.76 / 0.64 | 0.20 / 0.09 |
+| Germany / France / Spain | 0.83 / 0.64 / 0.63 | 0.28 / 0.10 / 0.10 |
+| Age 18-29 / 40-49 / 50-59 | 0.19 / 0.84 / 0.92 | 0.03 / 0.34 / 0.48 |
 
 The model mostly reflects real differences in churn rates between groups. For example, German customers
 actually churn at 30% against 17% in France. Even so, women and German customers who stay are flagged about
@@ -94,7 +94,7 @@ a separate page. Pages, using Streamlit multipage navigation (`st.navigation`):
 | Understand | **Customer insights** | Key findings and churn rate by segment, computed from historical data |
 | Understand | **About the model** | Plain summary and reliability, then expandable technical sections: metrics, curves, SHAP, fairness, model comparison, data decisions, versions |
 
-Risk levels: High = likelihood ≥ 24% (contact soon), Medium = 12–24% (monitor), Low = below 12%.
+Risk levels: High = likelihood ≥ 27% (contact soon), Medium = 13.5–27% (monitor), Low = below 13.5%.
 
 Code layout: `app/streamlit_app.py` (navigation), `app/common.py` (shared loaders and plain-language
 wording), `app/views/*.py` (one file per page). `tests/test_app.py` checks that every page renders and that the
