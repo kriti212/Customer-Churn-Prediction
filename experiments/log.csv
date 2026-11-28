@@ -12,3 +12,16 @@ timestamp,stage,model,features,cv_roc_auc,cv_roc_auc_std,cv_pr_auc,cv_recall@0.5
 2026-11-23T22:57:17,optuna,xgboost,engineered,0.8642,0.0063,0.7000,0.7227,0.6094,"{""trials"": 50, ""best_params"": {""n_estimators"": 300, ""learning_rate"": 0.016773818940214506, ""max_depth"": 6, ""min_child_weight"": 4.327014135531446, ""subsample"": 0.7453986959030263, ""colsample_bytree"": 0.5572458849727424, ""reg_lambda"": 3.8401661186322613}}"
 2026-11-23T22:57:38,calibration,xgboost,engineered,0.8627,,0.6955,,,"{""brier_uncalibrated"": 0.1336, ""brier_calibrated"": 0.1028, ""threshold"": 0.24, ""oof_recall"": 0.7086}"
 2026-11-23T22:58:02,test_eval,xgboost,engineered,0.8773,,0.7251,,,"{""threshold"": 0.24, ""recall"": 0.7377, ""forced"": false}"
+2026-11-28T19:47:07,go_no_go,logreg,raw,0.7663,0.0077,0.4535,0.6896,0.4918,threshold=0.75
+2026-11-28T19:47:08,compare,logreg,raw,0.7663,0.0077,0.4535,0.6896,0.4918,default params
+2026-11-28T19:47:08,compare,logreg,engineered,0.8353,0.0081,0.6474,0.7325,0.5704,default params
+2026-11-28T19:47:15,compare,random_forest,raw,0.8556,0.0066,0.6707,0.6779,0.6131,default params
+2026-11-28T19:47:20,compare,random_forest,engineered,0.8582,0.0072,0.6854,0.6908,0.6113,default params
+2026-11-28T19:47:24,compare,xgboost,raw,0.8566,0.0080,0.6889,0.6926,0.6020,default params
+2026-11-28T19:47:27,compare,xgboost,engineered,0.8577,0.0061,0.6888,0.6890,0.6063,default params
+2026-11-28T19:47:29,compare,lightgbm,raw,0.8465,0.0120,0.6749,0.6147,0.6000,default params
+2026-11-28T19:47:31,compare,lightgbm,engineered,0.8470,0.0117,0.6726,0.6160,0.6018,default params
+2026-11-28T19:59:49,optuna,random_forest,engineered,0.8600,0.0071,0.6903,0.7196,0.6077,"{""trials"": 50, ""best_params"": {""n_estimators"": 300, ""max_depth"": 10, ""min_samples_leaf"": 8, ""max_features"": 0.36619234305949977}}"
+2026-11-28T20:03:49,optuna,xgboost,engineered,0.8638,0.0078,0.6979,0.7288,0.6079,"{""trials"": 50, ""best_params"": {""n_estimators"": 300, ""learning_rate"": 0.02648413290925453, ""max_depth"": 4, ""min_child_weight"": 4.9409938653739, ""subsample"": 0.7375354119660196, ""colsample_bytree"": 0.6228702948486872, ""reg_lambda"": 1.5402266657023878}}"
+2026-11-28T20:04:14,calibration,xgboost,engineered,0.8628,,0.6969,,,"{""brier_uncalibrated"": 0.1373, ""brier_calibrated"": 0.1025, ""threshold"": 0.27, ""oof_recall"": 0.6675}"
+2026-11-28T20:04:45,test_eval,xgboost,engineered,0.8791,,0.7262,,,"{""threshold"": 0.27, ""recall"": 0.7083, ""forced"": true}"

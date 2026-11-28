@@ -95,7 +95,12 @@ class FeatureEngineer(BaseEstimator, TransformerMixin):
             return X
         X["ZeroBalance"] = (X["Balance"] == 0).astype(int)
         X["BalanceToSalary"] = X["Balance"] / (X["EstimatedSalary"] + 1.0)
-        X["AgeXActive"] = X["Age"] * X["IsActiveMember"]
+        # Age is split into two mutually exclusive interaction terms so the model
+        # can learn a separate age slope for active vs inactive members.
+        # AgeXActive + AgeXInactive = Age, so raw Age is excluded from the
+        # ColumnTransformer (see build_preprocessor) to avoid redundancy.
+        X["AgeXActive"]   = X["Age"] * X["IsActiveMember"]
+        X["AgeXInactive"] = X["Age"] * (1 - X["IsActiveMember"])
         # Churn jumps from 8% (2 products) to 83% (3) and 100% (4): a categorical
         # view lets the linear model capture that non-monotonic effect.
         X["ProductsCat"] = X["NumOfProducts"].clip(upper=3).astype(str)
@@ -104,17 +109,24 @@ class FeatureEngineer(BaseEstimator, TransformerMixin):
     def get_feature_names_out(self, input_features=None):
         names = list(config.FEATURE_COLS)
         if self.enabled:
-            names += ["ZeroBalance", "BalanceToSalary", "AgeXActive", "ProductsCat"]
+            names += ["ZeroBalance", "BalanceToSalary", "AgeXActive", "AgeXInactive", "ProductsCat"]
         return np.array(names, dtype=object)
 
 
-ENGINEERED_NUMERIC = ["ZeroBalance", "BalanceToSalary", "AgeXActive"]
+ENGINEERED_NUMERIC = ["ZeroBalance", "BalanceToSalary", "AgeXActive", "AgeXInactive"]
 ENGINEERED_CATEGORICAL = ["ProductsCat"]
 
 
 def build_preprocessor(scale: bool, engineered: bool) -> ColumnTransformer:
-    """One-hot encode categoricals (unknown values ignored) and optionally scale numerics."""
+    """One-hot encode categoricals (unknown values ignored) and optionally scale numerics.
+
+    When engineered=True, raw Age is excluded from the transformer because it is
+    fully represented by AgeXActive + AgeXInactive (which sum to Age). Keeping all
+    three would introduce perfect redundancy.
+    """
     numeric = config.NUMERIC_COLS + (ENGINEERED_NUMERIC if engineered else [])
+    if engineered:
+        numeric = [c for c in numeric if c != "Age"]  # replaced by AgeXActive + AgeXInactive
     categorical = config.CATEGORICAL_COLS + (ENGINEERED_CATEGORICAL if engineered else [])
     numeric_step = StandardScaler() if scale else "passthrough"
     return ColumnTransformer(

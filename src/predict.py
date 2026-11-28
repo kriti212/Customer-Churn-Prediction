@@ -80,9 +80,9 @@ def explain(df: pd.DataFrame, art: Artifacts, top_n: int = 5) -> list[list[dict]
 # Simple playbook: which retention action fits which risk driver.
 ACTIONS = {
     "IsActiveMember": "Re-engage: personalised offers or a check-in call to bring the customer back to active use.",
-    "Age × active member": "Re-engage: personalised offers or a check-in call to bring the customer back to active use.",
+    "Age × active member":   "Re-engage: personalised offers or a check-in call to bring the customer back to active use.",
+    "Age × inactive member": "Priority re-engagement: older inactive customers are at high churn risk — escalate to a relationship manager.",
     "NumOfProducts": "Review product fit: customers holding 3-4 products churn far more often. Check for mis-selling or bundle issues.",
-    "Age": "Offer age-relevant products (e.g. retirement or wealth-management advice).",
     "Geography": "Apply the region-specific retention programme (churn is about twice as high in Germany).",
     "Balance": "Contact about balance movements: offer better savings rates or a relationship-manager review.",
     "Balance-to-salary ratio": "Contact about balance movements: offer better savings rates or a relationship-manager review.",

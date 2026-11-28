@@ -18,6 +18,7 @@ ENGINEERED_LABELS = {
     "ZeroBalance": "Balance",
     "BalanceToSalary": "Balance-to-salary ratio",
     "AgeXActive": "Age × active member",
+    "AgeXInactive": "Age × inactive member",
 }
 
 
